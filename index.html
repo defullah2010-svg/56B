@@ -285,6 +285,7 @@ flatpickr('#dailyFrom',{ locale:'ar', dateFormat:'d-m-Y', altInput:true, altForm
 flatpickr('#dailyTo',{   locale:'ar', dateFormat:'d-m-Y', altInput:true, altFormat:'d-m-Y' });
 
 // print PDF
+// print PDF
 function printPDF(tabId){
   const section = document.getElementById(tabId).cloneNode(true);
   section.querySelectorAll('button, input[type="file"], .counter, .remove-thumb').forEach(el=>el.remove());
@@ -292,11 +293,15 @@ function printPDF(tabId){
   const wrapper = document.createElement('div');
   wrapper.style.width='210mm';
   wrapper.style.height='296mm'; // ارتفاع A4
-  wrapper.style.padding='10mm'; // تقليل padding لتوفير مساحة
+  wrapper.style.padding='10mm';
   wrapper.style.boxSizing='border-box';
   wrapper.style.backgroundImage="url('images/background.png')";
   wrapper.style.backgroundSize="cover";
   wrapper.style.backgroundRepeat="no-repeat";
+
+  // ✅ إضافة هامش علوي 30mm فقط في ملف PDF
+  wrapper.style.paddingTop = "30mm";
+
   wrapper.appendChild(section);
 
   const groups = ['dailyStudent1','dailyStudent2','dailyFollowGeneral','monthlyGeneral'];
@@ -308,7 +313,7 @@ function printPDF(tabId){
       imgs.forEach(src=>{
         const im = document.createElement('img');
         im.src = src;
-        im.style.width='150px'; // تصغير الصور قليلاً لتوفير مساحة
+        im.style.width='150px';
         im.style.height='150px';
         im.style.objectFit='cover';
         im.style.border='1px solid #ccc';
@@ -319,10 +324,10 @@ function printPDF(tabId){
   });
 
   html2pdf().set({
-    margin:0,
+    margin:0, // نتركها صفر، لأننا أضفنا الهامش يدوياً
     filename: (tabId==='daily'?'daily':'monthly')+'-report.pdf',
     image:{type:'jpeg', quality:1},
-    html2canvas:{scale:2, useCORS:true, scrollY:0}, // scale أقل لتقليل الطول
+    html2canvas:{scale:2, useCORS:true, scrollY:0},
     jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
   }).from(wrapper).save();
 }
