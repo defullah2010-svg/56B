@@ -291,15 +291,14 @@ function printPDF(tabId){
 
   const wrapper = document.createElement('div');
   wrapper.style.width='210mm';
-  wrapper.style.minHeight='296mm';
-  wrapper.style.padding='30mm 10mm 16mm 10mm';
+  wrapper.style.height='296mm'; // ارتفاع A4
+  wrapper.style.padding='10mm'; // تقليل padding لتوفير مساحة
   wrapper.style.boxSizing='border-box';
   wrapper.style.backgroundImage="url('images/background.png')";
   wrapper.style.backgroundSize="cover";
   wrapper.style.backgroundRepeat="no-repeat";
   wrapper.appendChild(section);
 
-  // فقط الصور ضمن أماكن رفعها
   const groups = ['dailyStudent1','dailyStudent2','dailyFollowGeneral','monthlyGeneral'];
   groups.forEach(key=>{
     const previews = section.querySelector('#'+key+'-preview');
@@ -309,8 +308,8 @@ function printPDF(tabId){
       imgs.forEach(src=>{
         const im = document.createElement('img');
         im.src = src;
-        im.style.width='155px';
-        im.style.height='130px';
+        im.style.width='150px'; // تصغير الصور قليلاً لتوفير مساحة
+        im.style.height='150px';
         im.style.objectFit='cover';
         im.style.border='1px solid #ccc';
         im.style.borderRadius='8px';
@@ -322,8 +321,8 @@ function printPDF(tabId){
   html2pdf().set({
     margin:0,
     filename: (tabId==='daily'?'daily':'monthly')+'-report.pdf',
-    image:{type:'jpeg', quality:0.96},
-    html2canvas:{scale:3, useCORS:true, backgroundColor:'#ffffff', scrollY:0},
+    image:{type:'jpeg', quality:1},
+    html2canvas:{scale:2, useCORS:true, scrollY:0}, // scale أقل لتقليل الطول
     jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
   }).from(wrapper).save();
 }
